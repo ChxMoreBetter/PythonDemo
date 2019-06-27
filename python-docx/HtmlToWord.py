@@ -118,7 +118,6 @@ def move_file(src_path, dst_path,fileName):
         # traceback.print_exc()
 
 def pythonWord(jsonData,fileName):
-
     #问卷 json 转 word
     # fileName = 'word.docx'
     questionnaireToWord(jsonData,fileName)
