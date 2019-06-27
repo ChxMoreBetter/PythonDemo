@@ -1,3 +1,21 @@
+Skip to content
+ 
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@ChxMoreBetter 
+0
+0 0 ChxMoreBetter/PythonDemo
+ Code  Issues 0  Pull requests 0  Projects 0  Wiki  Security  Insights  Settings
+PythonDemo/.gitignore
+@ChxMoreBetter ChxMoreBetter Update .gitignore
+6bacce0 3 minutes ago
+107 lines (86 sloc)  1.19 KB
+    
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -102,3 +120,18 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+.DS_Store
+.idea
+
+© 2019 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
