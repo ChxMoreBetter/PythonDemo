@@ -3,9 +3,13 @@ from docx.shared import Pt, RGBColor
 from  docx.oxml.ns import  qn
 from docx.shared import Inches
 import requests
+import os
+import shutil
 
+#桌面路径
+kDesktopPath = '/Users/yimiaotong/Desktop/Words'
 
-def htmlToWord(jsonData):
+def questionnaireToWord(jsonData,fileName):
     document = Document()
 
     common_style = commonStytle(document)
@@ -32,7 +36,7 @@ def htmlToWord(jsonData):
 
     try:
         # 保存文件
-        err = document.save('demo.docx')
+        err = document.save(fileName)
         if(err):
             print('转成 word 失败')
         else:
@@ -70,13 +74,13 @@ def answerStytle(document):
     style.font.color.rgb = RGBColor(219, 71, 71)
     return style
 
-def addImageInWord(imgs):
-    document = Document(u'demo.docx')
+def addImageInWord(imgs,fileName):
+    document = Document(fileName)
     r = document.add_paragraph().add_run()
 
+    img_name = 'saveImage.png'
     for img_str in imgs:
         # 保存图片至本地
-        img_name = 'saveImage.png'
         with open(img_name, 'wb')as f:
             response = requests.get(img_str).content
             f.write(response)
@@ -86,7 +90,7 @@ def addImageInWord(imgs):
 
     try:
         # 保存文件
-        err = document.save('demo.docx')
+        err = document.save(fileName)
         if(err):
             print('图片写入 word 失败')
         else:
@@ -94,10 +98,45 @@ def addImageInWord(imgs):
 
     except:
         print('图片写入 word 失败')
+    #如果图片存在就删除
+    if os.path.exists(img_name):
+        os.remove(img_name)
+    else:
+        print('no such file %s'%img_name)
 
+def move_file(src_path, dst_path,fileName):
+    print ('from : '+src_path)
+    print ('to : '+dst_path)
+    try:
+        if not os.path.exists(dst_path):
+            os.mkdir(dst_path)
+        f_dst = os.path.join(dst_path,fileName)
+        shutil.move(src_path, f_dst)
+
+    except Exception as e:
+        print('move_file ERROR: ',e)
+        # traceback.print_exc()
+
+def pythonWord(jsonData,fileName):
+
+    #问卷 json 转 word
+    # fileName = 'word.docx'
+    questionnaireToWord(jsonData,fileName)
+
+    #添加图片到 word
+    imgs_arr = [
+        "http://knowledge-profile.yimiaoquan100.com/9ffceaf965514b2499e39045a0979e96.jpg",
+        "http://knowledge-profile.yimiaoquan100.com/9ffceaf965514b2499e39045a0979e96.jpg"
+    ]
+    addImageInWord(imgs_arr,fileName)
+
+    #移动 word 到桌面
+    fromPath = os.path.abspath(fileName)
+    move_file(fromPath,kDesktopPath,fileName)
 
 if __name__ == '__main__':
-    print('html 转 word')
+
+    #请修改全局 kDesktopPath 设置为本地路径
     jsonData = [
         {
             'title':'草帽团',
@@ -117,10 +156,7 @@ if __name__ == '__main__':
             'type':'2'
         }
     ]
+    for i in range(2):
+        fileName = 'word'+str(i)+'.docx'
+        pythonWord(jsonData,fileName)
 
-    htmlToWord(jsonData)
-    imgs_arr = [
-        "http://knowledge-profile.yimiaoquan100.com/9ffceaf965514b2499e39045a0979e96.jpg",
-        "http://knowledge-profile.yimiaoquan100.com/9ffceaf965514b2499e39045a0979e96.jpg"
-    ]
-    addImageInWord(imgs_arr)
